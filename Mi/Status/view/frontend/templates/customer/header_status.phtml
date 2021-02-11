@@ -1,0 +1,16 @@
+<div style='float: right; margin-left: 5px;' class="mi-status-section" data-bind="scope: 'section'">
+    <p data-bind="text: statussection().status"></p>
+</div>
+<script type="text/x-magento-init">
+    {
+    	"*": {
+        	"Magento_Ui/js/core/app": {
+            	"components": {
+                	"section": {
+                    	"component": "Mi_Status/js/section"
+                	}
+            	}
+        	}
+    	}
+    }
+</script>

@@ -1,52 +1,28 @@
-# Mage2 Module Mi Status
-
-    ``mi/module-status``
+# Mage2 Module Customer Status
 
  - [Main Functionalities](#markdown-header-main-functionalities)
  - [Installation](#markdown-header-installation)
- - [Configuration](#markdown-header-configuration)
  - [Specifications](#markdown-header-specifications)
- - [Attributes](#markdown-header-attributes)
-
 
 ## Main Functionalities
+- Change customer status (frontend / backend)
 
 
-## Installation
-\* = in production please use the `--keep-generated` option
+### Installiation
 
-### Type 1: Zip file
-
- - Unzip the zip file in `app/code/Mi`
+ - Unzip the zip file in `app/code/`
  - Enable the module by running `php bin/magento module:enable Mi_Status`
  - Apply database updates by running `php bin/magento setup:upgrade`\*
  - Flush the cache by running `php bin/magento cache:flush`
-
-### Type 2: Composer
-
- - Make the module available in a composer repository for example:
-    - private repository `repo.magento.com`
-    - public repository `packagist.org`
-    - public github repository as vcs
- - Add the composer repository to the configuration by running `composer config repositories.repo.magento.com composer https://repo.magento.com/`
- - Install the module composer by running `composer require mi/module-status`
- - enable the module by running `php bin/magento module:enable Mi_Status`
- - apply database updates by running `php bin/magento setup:upgrade`\*
- - Flush the cache by running `php bin/magento cache:flush`
-
-
-## Configuration
-
-
 
 
 ## Specifications
 
  - Controller
-	- frontend > mi/customer/status
-
-
-## Attributes
-
-
-
+	- frontend > mis/customer/status (GET)
+		field with customer status
+	- frontend > mis/customer/statusPost (POST)
+		save status attribute value
+	- backend > customer/index/edit (GET / POST)
+		Customer Information / Customer Status
+		save and retrieve status from admin

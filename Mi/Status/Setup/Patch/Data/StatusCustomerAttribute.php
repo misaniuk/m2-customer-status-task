@@ -48,7 +48,7 @@ class StatusCustomerAttribute implements DataPatchInterface, PatchRevertableInte
             'customer_mi_status',
             [
                 'type' => 'varchar',
-                'label' => 'Customer Mi Status',
+                'label' => 'Customer Status',
                 'input' => 'text',
                 'source' => '',
                 'required' => false,

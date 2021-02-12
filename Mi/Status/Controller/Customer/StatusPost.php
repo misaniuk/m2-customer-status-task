@@ -8,11 +8,8 @@
 namespace Mi\Status\Controller\Customer;
 
 use Magento\Customer\Api\Data\CustomerInterface;
-use Magento\Customer\Model\AddressRegistry;
 use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterface;
 use Magento\Customer\Model\AuthenticationInterface;
-use Magento\Customer\Model\Customer\Mapper;
-use Magento\Customer\Model\EmailNotificationInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\Request\InvalidRequestException;
@@ -21,10 +18,8 @@ use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Data\Form\FormKey\Validator;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magento\Customer\Model\CustomerExtractor;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\Escaper;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\InvalidEmailOrPasswordException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -32,16 +27,9 @@ use Magento\Framework\Exception\State\UserLockedException;
 use Magento\Customer\Controller\AbstractAccount;
 use Magento\Framework\Phrase;
 
-/**
- * Class EditPost
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- */
+
 class StatusPost extends AbstractAccount implements CsrfAwareActionInterface, HttpPostActionInterface
 {
-    /**
-     * Form code for data extractor
-     */
-    const FORM_DATA_EXTRACTOR_CODE = 'customer_account_edit';
 
     /**
      * @var AccountManagementInterface
@@ -58,10 +46,6 @@ class StatusPost extends AbstractAccount implements CsrfAwareActionInterface, Ht
      */
     protected $formKeyValidator;
 
-    /**
-     * @var CustomerExtractor
-     */
-    protected $customerExtractor;
 
     /**
      * @var Session
@@ -69,29 +53,11 @@ class StatusPost extends AbstractAccount implements CsrfAwareActionInterface, Ht
     protected $session;
 
     /**
-     * @var \Magento\Customer\Model\EmailNotificationInterface
-     */
-    private $emailNotification;
-
-    /**
      * @var AuthenticationInterface
      */
     private $authentication;
 
-    /**
-     * @var Mapper
-     */
-    private $customerMapper;
 
-    /**
-     * @var Escaper
-     */
-    private $escaper;
-
-    /**
-     * @var AddressRegistry
-     */
-    private $addressRegistry;
 
     /**
      * @param Context $context
@@ -99,28 +65,19 @@ class StatusPost extends AbstractAccount implements CsrfAwareActionInterface, Ht
      * @param AccountManagementInterface $customerAccountManagement
      * @param CustomerRepositoryInterface $customerRepository
      * @param Validator $formKeyValidator
-     * @param CustomerExtractor $customerExtractor
-     * @param Escaper|null $escaper
-     * @param AddressRegistry|null $addressRegistry
      */
     public function __construct(
         Context $context,
         Session $customerSession,
         AccountManagementInterface $customerAccountManagement,
         CustomerRepositoryInterface $customerRepository,
-        Validator $formKeyValidator,
-        CustomerExtractor $customerExtractor,
-        ?Escaper $escaper = null,
-        AddressRegistry $addressRegistry = null
+        Validator $formKeyValidator
     ) {
         parent::__construct($context);
         $this->session = $customerSession;
         $this->customerAccountManagement = $customerAccountManagement;
         $this->customerRepository = $customerRepository;
         $this->formKeyValidator = $formKeyValidator;
-        $this->customerExtractor = $customerExtractor;
-        $this->escaper = $escaper ?: ObjectManager::getInstance()->get(Escaper::class);
-        $this->addressRegistry = $addressRegistry ?: ObjectManager::getInstance()->get(AddressRegistry::class);
     }
 
     /**
@@ -166,7 +123,7 @@ class StatusPost extends AbstractAccount implements CsrfAwareActionInterface, Ht
     }
 
     /**
-     * Change customer email or password action
+     * Change customer status
      *
      * @return \Magento\Framework\Controller\Result\Redirect
      */
@@ -178,17 +135,15 @@ class StatusPost extends AbstractAccount implements CsrfAwareActionInterface, Ht
         $validFormKey = $this->formKeyValidator->validate($this->getRequest());
 
         if ($validFormKey && $this->getRequest()->isPost()) {
-
             if ($new_status = $this->getRequest()->getParam('status')) {
-                try {
-                
+                try {  
                     $customerId = $this->session->getCustomerId();
                     $customer = $this->customerRepository->getById($customerId);
                     $customer->setCustomAttribute('customer_mi_status', $new_status);
                     $this->customerRepository->save($customer);
 
                 } catch (\Exception $e) {
-                    $this->messageManager->addException($e, __('We can\'t save the customer.'));
+                    $this->messageManager->addException($e, __('We can\'t save the customer status.'));
                 }
             }
         }

@@ -11,7 +11,7 @@
             <block class="Magento\Customer\Block\Account\SortLinkInterface" name="account-status">
                 <arguments>
                     <argument name="path" xsi:type="string">mis/customer/status</argument>
-                    <argument name="label" xsi:type="string" translate="true">Change Mi Status</argument>
+                    <argument name="label" xsi:type="string" translate="true">My Status</argument>
                     <argument name="sortOrder" xsi:type="number">217</argument>
                 </arguments>
             </block>
